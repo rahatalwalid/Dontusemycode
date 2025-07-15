@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>RahatEarn</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <style>
+        :root { --header-gradient-start: #005BEA; --header-gradient-end: #00C6FB; --background-color: #f0f9ff; --card-background: #ffffff; --text-color: #333; --subtle-text-color: #777; --primary-color: #007BFF; --white-color: #ffffff; --shadow-color: rgba(0, 91, 234, 0.1); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-color); overscroll-behavior-y: none; }
+        .header { position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end)); color: var(--white-color); padding: 16px 20px; text-align: center; z-index: 1000; }
+        .main-content { padding: 80px 15px 90px 15px; }
+        .page { display: none; } .page.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .card { background-color: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 20px var(--shadow-color); text-align: center; }
+        .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end)); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .btn:disabled { background: #bdc3c7; }
+        .btn-secondary { background: #e9efff; color: var(--primary-color); }
+        .balance-display { font-size: 36px; font-weight: 700; color: var(--primary-color); margin: 10px 0; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: var(--subtle-text-color); }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -5px 20px var(--shadow-color); border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: #777; font-size: 12px; flex-grow: 1; }
+        .nav-item .nav-icon { font-size: 24px; margin-bottom: 4px; }
+        .nav-item.active { color: var(--primary-color); }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
+        .modal-content { background-color: #fefefe; padding: 20px; border-radius: 15px; width: 95%; max-width: 500px; text-align: center; position: relative; }
+        #ad-timer { font-size: 18px; font-weight: bold; color: var(--primary-color); margin-bottom: 15px; }
+        #close-ad-btn { display: none; background: #e74c3c; padding: 8px 16px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <header class="header"><h1>RahatEarn</h1></header>
+
+    <main class="main-content">
+        <section id="home-page" class="page"><div class="card"><p id="welcome-message">Welcome!</p><h2 style="font-size:16px;font-weight:500;color:#777;">Your Balance</h2><div id="balance-display" class="balance-display">৳...</div></div></section>
+        <section id="task-page" class="page"><div class="card"><h2>Daily Tasks</h2><div id="task-container"><p>Loading tasks...</p></div></div></section>
+        <section id="withdraw-page" class="page"><div class="card"><h2>Withdraw Funds</h2><form id="withdraw-form"><div class="form-group"><label for="method">Method</label><select id="method" required><option value="bKash">bKash (Min ৳10)</option><option value="Nagad">Nagad (Min ৳10)</option><option value="Recharge">Mobile Recharge (Min ৳20)</option></select></div><div class="form-group"><label for="amount">Amount (৳)</label><input type="number" id="amount" placeholder="Enter amount" required></div><div class="form-group"><label for="account-number">Account Number</label><input type="text" id="account-number" placeholder="Enter your number" required></div><p id="withdraw-error" style="color:red;font-size:14px;margin-bottom:10px;"></p><button type="submit" class="btn">Submit Request</button></form></div></section>
+        <section id="profile-page" class="page"><div class="card"><img id="profile-pic" src="" alt="Profile" style="width:90px;height:90px;border-radius:50%;margin:auto;"><h2 id="profile-name" style="font-size:22px;font-weight:600;">...</h2><p id="profile-username" style="color:#777;">...</p><button id="logout-button" class="btn btn-secondary" style="margin-top:20px;">Logout & Close</button></div></section>
+    </main>
+    
+    <div id="ad-modal" class="modal"><div class="modal-content"><div id="ad-timer"></div><div id="ad-content-container"></div><button id="close-ad-btn" class="btn">Close Ad</button></div></div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" data-page="home-page"><div class="nav-icon">🏠</div><div>Home</div></div>
+        <div class="nav-item" data-page="task-page"><div class="nav-icon">💰</div><div>Tasks</div></div>
+        <div class="nav-item" data-page="withdraw-page"><div class="nav-icon">💸</div><div>Withdraw</div></div>
+        <div class="nav-item" data-page="profile-page"><div class="nav-icon">👤</div><div>Profile</div></div>
+    </nav>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const firebaseConfig = { apiKey: "AIzaSyCpQw6OoJGaz3UQItuNbDeAb6DZOLij28I", authDomain: "rahatearn-d912d.firebaseapp.com", databaseURL: "https://rahatearn-d912d-default-rtdb.firebaseio.com", projectId: "rahatearn-d912d", storageBucket: "rahatearn-d912d.appspot.com", messagingSenderId: "477097035463", appId: "1:477097035463:web:a5ade5774bfd97f3f4e0e2" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+
+        let currentUser = (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user : { id: 12345, first_name: 'Test', username: 'testuser', photo_url: '' };
+        const userId = currentUser.id.toString();
+        let adTimerInterval;
+
+        function initializeApp() {
+            document.getElementById('home-page').classList.add('active');
+            setupNavigation();
+            setupUser();
+            loadAndSetupTask();
+            setupWithdrawForm();
+            document.getElementById('logout-button').addEventListener('click', () => tg.close());
+        }
+
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    document.getElementById(item.dataset.page).classList.add('active');
+                    navItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+        }
+        
+        function setupUser() { const userRef = database.ref('users/'+userId); userRef.on('value',(snapshot)=>{if(!snapshot.exists()){userRef.set({id:currentUser.id,firstName:currentUser.first_name||'N/A',username:currentUser.username||'N/A',balance:0,lastAdClick:0,joinDate:new Date().toISOString()})} const userData=snapshot.val()||{balance:0}; document.getElementById('balance-display').innerText=`৳${userData.balance.toFixed(2)}`}); const fullName=`${currentUser.first_name||''} ${currentUser.last_name||''}`.trim(); document.getElementById('welcome-message').innerText=`Welcome, ${fullName}!`; document.getElementById('profile-pic').src=currentUser.photo_url||'https://via.placeholder.com/150'; document.getElementById('profile-name').innerText=fullName; document.getElementById('profile-username').innerText=currentUser.username?`@${currentUser.username}`:'No username'; };
+        function loadAndSetupTask() { const taskContainer=document.getElementById('task-container'); const adModal=document.getElementById('ad-modal'); const closeBtn=document.getElementById('close-ad-btn'); database.ref('settings/adCode').on('value',(snapshot)=>{const adCode=snapshot.val(); if(adCode&&adCode.trim()!==''){taskContainer.innerHTML=`<button id="watch-ad-btn" class="btn">Watch Ad & Earn ৳0.02</button>`; document.getElementById('watch-ad-btn').addEventListener('click',()=>handleAdClick(adCode))}else{taskContainer.innerHTML=`<p>No tasks available right now.</p>`}}); closeBtn.onclick=()=>{clearInterval(adTimerInterval);adModal.style.display='none';}; };
+        async function handleAdClick(adCode) { const watchAdBtn=document.getElementById('watch-ad-btn'); watchAdBtn.disabled=true; const canWatch=await checkDailyLimit(); if(!canWatch){alert("Today's ad limit reached."); watchAdBtn.disabled=false; return} const userSnapshot=await database.ref('users/'+userId).once('value'); const userData=userSnapshot.val(); const lastClick=userData.lastAdClick||0; const now=Date.now(); if(now-lastClick<15000){alert(`Please wait a few seconds.`); watchAdBtn.disabled=false; return} const adModal=document.getElementById('ad-modal'); const timerDisplay=document.getElementById('ad-timer'); const closeBtn=document.getElementById('close-ad-btn'); const adContent=document.getElementById('ad-content-container'); adContent.innerHTML=adCode; adModal.style.display='flex'; closeBtn.style.display='none'; let timeLeft=15; timerDisplay.innerText=`Please wait: ${timeLeft}s`; adTimerInterval=setInterval(()=>{timeLeft--; timerDisplay.innerText=`Please wait: ${timeLeft}s`; if(timeLeft<=7){closeBtn.style.display='block'} if(timeLeft<=0){clearInterval(adTimerInterval); timerDisplay.innerText="Reward granted!"; grantReward(); setTimeout(()=>{adModal.style.display='none'; watchAdBtn.disabled=false},2000)}},1000); closeBtn.onclick=()=>{clearInterval(adTimerInterval); adModal.style.display='none'; watchAdBtn.disabled=false}; };
+        function getTodayDateString() { const today=new Date(); return `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`; };
+        async function checkDailyLimit() { const todayStr=getTodayDateString(); const statsRef=database.ref('dailyStats'); const snapshot=await statsRef.once('value'); const stats=snapshot.val(); if(!stats||stats.date!==todayStr){await statsRef.set({date:todayStr,adsWatched:0}); return true} return stats.adsWatched<2000; };
+        function grantReward() { database.ref('users/'+userId).transaction(userData=>{if(userData){userData.balance=(userData.balance||0)+0.02; userData.lastAdClick=Date.now()} return userData}); database.ref('dailyStats/adsWatched').transaction(currentCount=>(currentCount||0)+1); };
+        function setupWithdrawForm() { const form=document.getElementById('withdraw-form'); const errorP=document.getElementById('withdraw-error'); form.addEventListener('submit',function(e){e.preventDefault(); errorP.innerText=''; const amount=parseFloat(document.getElementById('amount').value); const method=document.getElementById('method').value; let minAmount=(method==='Recharge')?20:10; if(amount<minAmount){errorP.innerText=`Minimum for ${method} is ৳${minAmount}.`; return} database.ref('users/'+userId).once('value').then(snapshot=>{if(snapshot.val().balance<amount){errorP.innerText="Insufficient balance."; return} const btn=form.querySelector('button[type="submit"]'); btn.disabled=true; btn.innerText='Submitting...'; database.ref('withdrawals').push().set({userId,name:`${currentUser.first_name||''} ${currentUser.last_name||''}`.trim(),amount,method,account:document.getElementById('account-number').value,status:'Pending',requestDate:new Date().toISOString()}).then(()=>{alert('Request submitted!'); form.reset()}).catch(err=>alert('Error: '+err.message)).finally(()=>{btn.disabled=false;btn.innerText='Submit Request'})})}); };
+        
+        initializeApp();
+    });
+    </script>
+</body>
+</html>
