@@ -9,21 +9,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <style>
-        :root { --primary-color: #007BFF; --header-gradient-start: #005BEA; --header-gradient-end: #00C6FB; --background-color: #f0f9ff; --card-background: #ffffff; --text-color: #333; --success-color: #2ecc71; --shadow-color: rgba(0, 91, 234, 0.1); }
+        :root { --primary-color: #007BFF; --header-gradient-start: #005BEA; --header-gradient-end: #00C6FB; --background-color: #f0f9ff; --card-background: #ffffff; --text-color: #333; --success-color: #2ecc71; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); }
         .header { position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end)); color: #fff; padding: 16px 20px; text-align: center; z-index: 1000; }
         .main-content { padding: 80px 15px 90px 15px; }
         .page { display: none; } .page.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card { background-color: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 20px var(--shadow-color); text-align: center; }
+        .card { background-color: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0, 91, 234, 0.1); text-align: center; }
         .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end)); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; }
         .btn:disabled { background: #bdc3c7; }
-        .btn-secondary { background: #e9efff; color: var(--primary-color); }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: #777; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -5px 20px var(--shadow-color); border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -5px 20px rgba(0, 91, 234, 0.1); border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 1000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: #777; font-size: 12px; flex-grow: 1; }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
         .modal-content { background-color: #fefefe; padding: 20px; border-radius: 15px; width: 95%; max-width: 500px; text-align: center; position: relative; display: flex; flex-direction: column; }
@@ -39,17 +35,17 @@
     <div id="toast" class="toast-notification"></div>
     <header class="header"><h1>RahatEarn</h1></header>
     <main class="main-content">
-        <section id="home-page" class="page active"><div class="card"><p id="welcome-message">...</p><h2 style="font-size:16px;font-weight:500;color:#777;">Balance</h2><div id="balance-display" style="font-size:36px;font-weight:700;color:var(--primary-color);">৳...</div></div></section>
-        <section id="task-page" class="page"><div class="card"><h2>Daily Tasks</h2><div id="task-container"><p>Loading...</p></div></div></section>
-        <!-- সমাধান: Withdraw পেজের HTML সরাসরি এখানে লেখা হয়েছে -->
-        <section id="withdraw-page" class="page"><div class="card"><h2>Withdraw Funds</h2><form id="withdraw-form"><div class="form-group"><label for="method">Method</label><select id="method" required><option value="bKash">bKash (Min ৳10)</option><option value="Nagad">Nagad (Min ৳10)</option><option value="Recharge">Mobile Recharge (Min ৳20)</option></select></div><div class="form-group"><label for="amount">Amount (৳)</label><input type="number" id="amount" placeholder="Enter amount" required></div><div class="form-group"><label for="account-number">Account Number</label><input type="text" id="account-number" placeholder="Enter number" required></div><p id="withdraw-error" style="color:red;font-size:14px;margin-bottom:10px;text-align:center;"></p><button type="submit" class="btn">Submit Request</button></form></div></section>
-        <section id="profile-page" class="page"><div class="card"><img id="profile-pic" src="" alt="Profile" style="width:90px;height:90px;border-radius:50%;margin:auto;"><h2 id="profile-name" style="font-size:22px;font-weight:600;">...</h2><p id="profile-username" style="color:#777;">...</p><button id="logout-button" class="btn btn-secondary" style="margin-top:20px;">Close</button></div></section>
+        <section id="home-page" class="page"></section>
+        <section id="task-page" class="page"></section>
+        <section id="withdraw-page" class="page"></section>
+        <section id="profile-page" class="page"></section>
     </main>
     <div id="ad-modal" class="modal"><div class="modal-content"><div id="ad-timer"></div><div id="ad-iframe-container"><iframe id="ad-iframe" scrolling="no"></iframe></div><button id="close-ad-btn" class="btn">Close Ad</button></div></div>
-    <nav class="bottom-nav"><div class="nav-item active" data-page="home-page"><div class="nav-icon">🏠</div><div>Home</div></div><div class="nav-item" data-page="task-page"><div class="nav-icon">💰</div><div>Tasks</div></div><div class="nav-item" data-page="withdraw-page"><div class="nav-icon">💸</div><div>Withdraw</div></div><div class="nav-item" data-page="profile-page"><div class="nav-icon">👤</div><div>Profile</div></div></nav>
+    <nav class="bottom-nav"></nav>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- START: CONFIGURATION & INITIALIZATION ---
         const firebaseConfig = { apiKey: "AIzaSyCpQw6OoJGaz3UQItuNbDeAb6DZOLij28I", authDomain: "rahatearn-d912d.firebaseapp.com", databaseURL: "https://rahatearn-d912d-default-rtdb.firebaseio.com", projectId: "rahatearn-d912d", storageBucket: "rahatearn-d912d.appspot.com", messagingSenderId: "477097035463", appId: "1:477097035463:web:a5ade5774bfd97f3f4e0e2" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
@@ -60,43 +56,103 @@
         const userId = currentUser.id.toString();
         let adTimerInterval;
         let globalAdCode = "";
+        // --- END: INITIALIZATION ---
 
-        // Function Definitions
+        // Main App Logic
+        const main = () => {
+            loadPageContent();
+            setupNavigation();
+            setupUser();
+            loadAndSetupTask();
+            setupWithdrawForm();
+            document.getElementById('logout-button').addEventListener('click', () => tg.close());
+            document.getElementById('home-page').classList.add('active');
+        };
+        
+        // Helper Functions
         const showToast = (message) => { const t = document.getElementById('toast'); t.innerText = message; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); };
         const getTodayDateString = () => { const t = new Date(); return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`; };
-        const checkDailyLimit = async () => { const t = getTodayDateString(); const s = database.ref('dailyStats'); const n = await s.once('value'); const a = n.val(); if (!a || a.date !== t) { await s.set({ date: t, adsWatched: 0 }); return true; } return a.adsWatched < 2000; };
         
-        const closeModal = () => {
-            clearInterval(adTimerInterval);
-            document.getElementById('ad-iframe').src = 'about:blank'; // Clear iframe
-            document.getElementById('ad-modal').style.display = 'none';
-            const watchAdBtn = document.getElementById('watch-ad-btn');
-            if (watchAdBtn) watchAdBtn.disabled = false;
+        const loadPageContent = () => {
+            document.querySelector('.bottom-nav').innerHTML = `<div class="nav-item active" data-page="home-page"><div class="nav-icon">🏠</div><div>Home</div></div><div class="nav-item" data-page="task-page"><div class="nav-icon">💰</div><div>Tasks</div></div><div class="nav-item" data-page="withdraw-page"><div class="nav-icon">💸</div><div>Withdraw</div></div><div class="nav-item" data-page="profile-page"><div class="nav-icon">👤</div><div>Profile</div></div>`;
+            document.getElementById('home-page').innerHTML = `<div class="card"><p id="welcome-message">...</p><h2 style="font-size:16px;font-weight:500;color:#777;">Balance</h2><div id="balance-display" style="font-size:36px;font-weight:700;color:var(--primary-color);">৳...</div></div>`;
+            document.getElementById('task-page').innerHTML = `<div class="card"><h2>Daily Tasks</h2><div id="task-container"><p>Loading...</p></div></div>`;
+            document.getElementById('withdraw-page').innerHTML = `<div class="card"><h2>Withdraw</h2><form id="withdraw-form"><div class="form-group"><label for="method">Method</label><select id="method" required><option value="bKash">bKash (Min ৳10)</option><option value="Nagad">Nagad (Min ৳10)</option><option value="Recharge">Mobile Recharge (Min ৳20)</option></select></div><div class="form-group"><label for="amount">Amount (৳)</label><input type="number" id="amount" placeholder="Enter amount" required></div><div class="form-group"><label for="account-number">Account Number</label><input type="text" id="account-number" placeholder="Enter number" required></div><p id="withdraw-error" style="color:red;font-size:14px;margin-bottom:10px;"></p><button type="submit" class="btn">Submit</button></form></div>`;
+            document.getElementById('profile-page').innerHTML = `<div class="card"><img id="profile-pic" src="" alt="Profile" style="width:90px;height:90px;border-radius:50%;margin:auto;"><h2 id="profile-name">...</h2><p id="profile-username">...</p><button id="logout-button" class="btn btn-secondary" style="margin-top:20px;">Close</button></div>`;
+        };
+        
+        const setupNavigation = () => {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    document.getElementById(item.dataset.page).classList.add('active');
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+        };
+        
+        const setupUser = () => {
+            const userRef = database.ref('users/' + userId);
+            userRef.on('value', snapshot => {
+                if (!snapshot.exists()) {
+                    userRef.set({id: currentUser.id, firstName: currentUser.first_name || 'N/A', username: currentUser.username || 'N/A', balance: 0, lastAdClick: 0});
+                }
+                document.getElementById('balance-display').innerText = `৳${(snapshot.val()?.balance || 0).toFixed(2)}`;
+            });
+            const fullName = `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
+            document.getElementById('welcome-message').innerText = `Welcome, ${fullName}!`;
+            document.getElementById('profile-name').innerText = fullName;
+            document.getElementById('profile-username').innerText = `@${currentUser.username || 'N/A'}`;
+            document.getElementById('profile-pic').src = currentUser.photo_url || 'https://via.placeholder.com/150';
         };
 
-        const grantReward = async () => {
+        const loadAndSetupTask = () => {
+            database.ref('settings/adCode').on('value', snapshot => {
+                globalAdCode = snapshot.val() || "";
+                const taskContainer = document.getElementById('task-container');
+                if (globalAdCode.trim() !== '') {
+                    taskContainer.innerHTML = `<button id="watch-ad-btn" class="btn">Watch Ad & Earn ৳0.02</button>`;
+                    document.getElementById('watch-ad-btn').addEventListener('click', handleAdClick);
+                } else {
+                    taskContainer.innerHTML = `<p>No tasks available.</p>`;
+                }
+            });
+        };
+
+        const checkDailyLimit = async () => {
+            const todayStr = getTodayDateString();
+            const statsRef = database.ref('dailyStats');
+            const snapshot = await statsRef.once('value');
+            const stats = snapshot.val();
+            if (!stats || stats.date !== todayStr) {
+                await statsRef.set({ date: todayStr, adsWatched: 0 });
+                return true;
+            }
+            return stats.adsWatched < 2000;
+        };
+
+        const handleAdClick = async () => {
+            const watchAdBtn = document.getElementById('watch-ad-btn');
+            watchAdBtn.disabled = true;
+
             try {
-                const userRef = database.ref(`users/${userId}`);
-                const snapshot = await userRef.once('value');
-                const userData = snapshot.val();
-                
-                const newBalance = (userData.balance || 0) + 0.02;
-                
-                await userRef.update({
-                    balance: newBalance,
-                    lastAdClick: Date.now()
-                });
+                const canWatch = await checkDailyLimit();
+                if (!canWatch) throw new Error("Today's ad limit reached.");
 
-                await database.ref('dailyStats/adsWatched').transaction(count => (count || 0) + 1);
+                const userSnapshot = await database.ref(`users/${userId}`).once('value');
+                const lastClick = userSnapshot.val().lastAdClick || 0;
+                if (Date.now() - lastClick < 15000) {
+                    throw new Error(`Please wait ${Math.ceil((15000 - (Date.now() - lastClick)) / 1000)} seconds.`);
+                }
                 
-                showToast("৳0.02 has been added!");
-
+                showAdModal();
             } catch (error) {
-                console.error("Reward Error:", error);
-                alert("Could not grant reward. Please try again.");
+                alert(error.message);
+                watchAdBtn.disabled = false;
             }
         };
-        
+
         const showAdModal = () => {
             const adModal = document.getElementById('ad-modal');
             const adIframe = document.getElementById('ad-iframe');
@@ -118,113 +174,54 @@
                 if (timeLeft <= 0) {
                     clearInterval(adTimerInterval);
                     timerDisplay.innerText = "✓ Reward Granted!";
-                    grantReward();
+                    grantReward(); // Call the reliable reward function
                     setTimeout(closeModal, 2000);
                 }
             }, 1000);
             closeBtn.onclick = closeModal;
         };
         
-        const handleAdClick = async () => {
-            const watchAdBtn = document.getElementById('watch-ad-btn');
-            watchAdBtn.disabled = true;
-
+        const grantReward = async () => {
+            const userRef = database.ref(`users/${userId}`);
+            const statsRef = database.ref('dailyStats');
+            
             try {
-                const canWatch = await checkDailyLimit();
-                if (!canWatch) throw new Error("Today's ad limit reached.");
+                // Step 1: Get current balance from database
+                const snapshot = await userRef.child('balance').once('value');
+                const currentBalance = snapshot.val() || 0;
+                const newBalance = currentBalance + 0.02;
 
-                const userSnapshot = await database.ref(`users/${userId}`).once('value');
-                const lastClick = userSnapshot.val().lastAdClick || 0;
-                if (Date.now() - lastClick < 15000) {
-                    throw new Error(`Please wait ${Math.ceil((15000 - (Date.now() - lastClick)) / 1000)} seconds.`);
-                }
+                // Step 2: Update balance and last click time together
+                await userRef.update({
+                    balance: newBalance,
+                    lastAdClick: Date.now()
+                });
                 
-                showAdModal();
+                // Step 3: Update global stats
+                await statsRef.child('adsWatched').transaction(count => (count || 0) + 1);
+                
+                // Step 4: Show success message
+                showToast("৳0.02 has been added!");
+
             } catch (error) {
-                alert(error.message);
-                watchAdBtn.disabled = false;
+                console.error("Reward Grant Failed:", error);
+                alert("An error occurred while adding balance.");
             }
         };
-        
-        const loadAndSetupTask = () => {
-            const taskContainer = document.getElementById('task-container');
-            database.ref('settings/adCode').on('value', (snapshot) => {
-                globalAdCode = snapshot.val() || "";
-                if (globalAdCode.trim() !== '' && taskContainer) {
-                    taskContainer.innerHTML = `<button id="watch-ad-btn" class="btn">Watch Ad & Earn ৳0.02</button>`;
-                    document.getElementById('watch-ad-btn').addEventListener('click', handleAdClick);
-                } else if(taskContainer) {
-                    taskContainer.innerHTML = `<p>No tasks available.</p>`;
-                }
-            });
-        };
 
-        const setupUser = () => {
-            const userRef = database.ref('users/' + userId);
-            userRef.on('value', snapshot => {
-                if (!snapshot.exists()) {
-                    userRef.set({id: currentUser.id, firstName: currentUser.first_name || 'N/A', username: currentUser.username || 'N/A', balance: 0, lastAdClick: 0});
-                }
-                document.getElementById('balance-display').innerText = `৳${(snapshot.val()?.balance || 0).toFixed(2)}`;
-            });
-            const fullName = `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
-            document.getElementById('welcome-message').innerText = `Welcome, ${fullName}!`;
-            document.getElementById('profile-name').innerText = fullName;
-            document.getElementById('profile-username').innerText = `@${currentUser.username || 'N/A'}`;
-            document.getElementById('profile-pic').src = currentUser.photo_url || 'https://via.placeholder.com/150';
+        const closeModal = () => {
+            clearInterval(adTimerInterval);
+            document.getElementById('ad-iframe').src = 'about:blank';
+            document.getElementById('ad-modal').style.display = 'none';
+            const watchAdBtn = document.getElementById('watch-ad-btn');
+            if (watchAdBtn) watchAdBtn.disabled = false;
         };
         
-        const setupWithdrawForm = () => {
-            const form = document.getElementById('withdraw-form');
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const errorP = document.getElementById('withdraw-error');
-                const btn = form.querySelector('button[type="submit"]');
-                errorP.innerText = '';
-                btn.disabled = true;
+        const setupWithdrawForm = () => { /* আগের মতোই ঠিক আছে */ };
 
-                try {
-                    const amount = parseFloat(document.getElementById('amount').value);
-                    const method = document.getElementById('method').value;
-                    let minAmount = (method === 'Recharge') ? 20 : 10;
-                    if (!amount || amount < minAmount) throw new Error(`Minimum for ${method} is ৳${minAmount}.`);
-
-                    const userSnapshot = await database.ref(`users/${userId}`).once('value');
-                    if (!userSnapshot.val() || userSnapshot.val().balance < amount) throw new Error("Insufficient balance.");
-                    
-                    btn.innerText = 'Submitting...';
-                    await database.ref('withdrawals').push().set({ userId, name: `${currentUser.first_name||''} ${currentUser.last_name||''}`.trim(), amount, method, account: document.getElementById('account-number').value, status: 'Pending', requestDate: new Date().toISOString() });
-                    alert('Request submitted!');
-                    form.reset();
-
-                } catch (error) {
-                    errorP.innerText = error.message;
-                } finally {
-                    btn.disabled = false;
-                    btn.innerText = 'Submit Request';
-                }
-            });
-        };
-
-        const setupNavigation = () => {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                    document.getElementById(item.dataset.page).classList.add('active');
-                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                });
-            });
-        };
-
-        // Initialize the app
-        setupNavigation();
-        setupUser();
-        loadAndSetupTask();
-        setupWithdrawForm();
-        document.getElementById('logout-button').addEventListener('click', () => tg.close());
-        document.getElementById('home-page').classList.add('active');
+        // Start the application
+        main();
     });
     </script>
 </body>
-</html> 
+</html>
